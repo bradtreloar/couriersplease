@@ -13,9 +13,7 @@ class ClientTestCase(EntityTestCase):
     def setUp(self):
         with open('settings.yml', 'r') as stream:
             settings = yaml.load(stream)
-        self.client = Client(settings)
-        # use sandbox API
-        self.client.base_url = 'https://api-test.couriersplease.com.au/v1/'
+        self.client = Client(settings['auth'], sandbox=True)
 
 
     def test_book_domestic_pickup(self):

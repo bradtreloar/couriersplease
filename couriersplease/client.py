@@ -8,16 +8,19 @@ class Client:
     'HTTP request client for CP API'
 
 
-    def __init__(self, settings):
+    def __init__(self, auth, sandbox=False):
         # save auth as tuple
         self.auth = (
-            settings['auth']['user'],
-            settings['auth']['pass']
+            auth['user'],
+            auth['pass']
         )
         self.headers = {
             'Accept': 'application/json',
         }
-        self.base_url = 'https://api.couriersplease.com.au/v1/'
+        if sandbox:
+            self.base_url = 'https://api-test.couriersplease.com.au/v1/'
+        else:
+            self.base_url = 'https://api.couriersplease.com.au/v1/'
 
 
     def request(self, verb, path, data):
