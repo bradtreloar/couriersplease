@@ -12,9 +12,10 @@ class ClientTestCase(EntityTestCase):
 
 
     def setUp(self):
-        with open('settings.yml', 'r') as stream:
-            settings = yaml.load(stream)
-        self.client = Client(settings['auth'], sandbox=True)
+        # auth.yml must be a YAML file containing
+        # two string properties: user and pass
+        with open('auth.yml', 'r') as auth:
+            self.client = Client(yaml.load(auth), sandbox=True)
 
 
     def test_book_domestic_pickup(self):

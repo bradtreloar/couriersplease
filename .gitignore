@@ -5,5 +5,5 @@
 */__pycache__/
 
 # Private files
-settings.yml
+auth.yml
 todo.txt
