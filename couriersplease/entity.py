@@ -28,13 +28,13 @@ class EntityBase:
 class DomesticItem(EntityBase):
     'Couriers Please Domestic Item'
 
-    def __init__(self):
+    def __init__(self, item_data):
         EntityBase.__init__(self)
-        self.quantity = None
-        self.length = None
-        self.height = None
-        self.width = None
-        self.physical_weight = None
+        self.quantity = item_data['quantity']
+        self.length = item_data['length']
+        self.height = item_data['height']
+        self.width = item_data['width']
+        self.physical_weight = item_data['physical_weight']
 
 
     def validate(self):

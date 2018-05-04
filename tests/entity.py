@@ -27,13 +27,13 @@ class EntityTestCase(unittest.TestCase):
 
 
     def dummy_domestic_item(self):
-        item = DomesticItem()
-        item.quantity = 5
-        item.length = 40
-        item.height = 60
-        item.width = 30
-        item.physical_weight = 0.05
-        return item
+        return DomesticItem({
+            'quantity': 5,
+            'length': 40,
+            'height': 60,
+            'width': 30,
+            'physical_weight': 0.05,
+        })
 
 
     def dummy_domestic_shipment(self):
