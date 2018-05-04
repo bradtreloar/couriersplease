@@ -1,7 +1,7 @@
 
 import requests
 
-from couriersplease.entity import DomesticItem, DomesticPickup, DomesticQuote, DomesticShipment, Location
+from couriersplease.entity import DomesticItem, DomesticPickup, DomesticQuote, DomesticRate, DomesticShipment, Location
 
 
 class Client:
@@ -101,7 +101,8 @@ class Client:
         response = self.request('POST', 'domestic/quote', quote.get_dict())
         body = response.json()
         if body['responseCode'] == 'SUCCESS':
-            for rate in body['data']:
+            for rate_data in body['data']:
+                rate = DomesticRate(rate_data)
                 quote.rates.append(rate)
             return quote
         else:

@@ -4,7 +4,7 @@ import yaml
 
 from tests.entity import EntityTestCase
 from couriersplease.client import Client, DataValidationError
-from couriersplease.entity import Location
+from couriersplease.entity import Location, DomesticRate
 
 
 
@@ -59,8 +59,7 @@ class ClientTestCase(EntityTestCase):
         quote = self.client.get_domestic_quote(location_from, location_to, items)
         self.assertTrue(len(quote.rates) > 0, 'API call returned no results')
         for rate in quote.rates:
-            for key in ['CalculatedFreightCharge', 'Weight']:
-                self.assertIn(key, rate.keys())
+            self.assertIsInstance(rate, DomesticRate)
 
         # test again without required field
         location_from.postcode = None

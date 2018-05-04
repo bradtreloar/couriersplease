@@ -26,7 +26,7 @@ class EntityBase:
 
 
 class DomesticItem(EntityBase):
-    'Couriers Please Domestic Item'
+    
 
     def __init__(self, item_data):
         EntityBase.__init__(self)
@@ -50,7 +50,6 @@ class DomesticItem(EntityBase):
 
     
 class DomesticPickup(EntityBase):
-    'Couriers Please Domestic Pickup'
 
 
     def __init__(self, shipments):
@@ -126,7 +125,6 @@ class DomesticPickup(EntityBase):
 
 
 class DomesticQuote(EntityBase):
-    'Couriers Please Domestic Quote'
 
 
     def __init__(self, location_from, location_to, items):
@@ -153,8 +151,26 @@ class DomesticQuote(EntityBase):
 
 
 
+class DomesticRate(EntityBase):
+
+
+    def __init__(self, rate_data):
+        EntityBase.__init__(self)
+        self.code = rate_data['RateCardCode']
+        self.description = rate_data['RateCardDescription']
+        # store prices as floats
+        self.freight_charge = float(rate_data['CalculatedFreightCharge'])
+        self.fuel_surcharge = float(rate_data['CalculatedFuelCharge'])
+        self.total_charge = self.freight_charge + self.fuel_surcharge
+        self.eta = rate_data['ETA']
+        # store PickupCutOffTime as datetime.time object
+        self.pickup_cutoff_time = datetime.strptime(rate_data['PickupCutOffTime'], '%H:%M').time()
+        # store weight as float
+        self.weight = float(rate_data['Weight'])
+
+
+
 class DomesticShipment(EntityBase):
-    'Couriers Please Domestic Shipment'
 
 
     def __init__(self):
@@ -272,7 +288,6 @@ class DomesticShipment(EntityBase):
 
 
 class Location(EntityBase):
-    'Couriers Please Location Entity'
 
 
     def __init__(self, data):
