@@ -41,40 +41,32 @@ class ClientTestCase(EntityTestCase):
         self.assertIsInstance(label, str)
 
 
-    def test_get_domestic_shipment_quote(self):
-        # test with a valid shipment
-        shipment = self.dummy_domestic_shipment()
-        quote = self.client.get_domestic_shipment_quote(shipment)
-        self.assertTrue(len(quote.rates) > 0, 'API call returned no results')
-        for rate in quote.rates:
-            for key in ['CalculatedFreightCharge', 'Weight']:
-                self.assertIn(key, rate.keys())
-
-        # test again without required field
-        shipment.pickup_postcode = None
-        try:
-            quote = self.client.get_domestic_shipment_quote(shipment)
-        except DataValidationError as ex:
-            self.assertEqual([{
-                'type': 'Required Field', 
-                'field': 'fromPostcode', 
-                'description': 'Please select From Postcode.'
-            }], ex.errors)
-
-
     def test_get_domestic_quote(self):
-        # test with a valid shipment
-        quote = self.dummy_domestic_quote()
-        self.client.get_domestic_quote(quote)
+        location_from = Location({
+            'Postcode': '5160',
+            'State': 'SA',
+            'Suburb': 'LONSDALE',
+            'PickUpFlag': 'Y',
+        })
+        location_to = Location({
+            'Postcode': '5173',
+            'State': 'SA',
+            'Suburb': 'ALDINGA BEACH',
+            'PickUpFlag': 'Y',
+        })
+        items = list()
+        items.append(self.dummy_domestic_item())
+        quote = self.client.get_domestic_quote(location_from, location_to, items)
         self.assertTrue(len(quote.rates) > 0, 'API call returned no results')
         for rate in quote.rates:
             for key in ['CalculatedFreightCharge', 'Weight']:
                 self.assertIn(key, rate.keys())
 
         # test again without required field
-        quote.from_postcode = None
+        location_from.postcode = None
         try:
-            self.client.get_domestic_quote(quote)
+            self.client.get_domestic_quote(location_from, location_to, items)
+            self.fail('Expected DataValidationError')
         except DataValidationError as ex:
             self.assertEqual([{
                 'type': 'Required Field', 
@@ -106,6 +98,7 @@ class ClientTestCase(EntityTestCase):
         shipment.pickup_postcode = None
         try:
             self.client.validate_domestic_shipment(shipment)
+            self.fail('Expected DataValidationError')
         except DataValidationError as ex:
             self.assertEqual([{
                 'type': 'Required Field', 

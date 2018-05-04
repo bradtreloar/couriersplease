@@ -129,13 +129,15 @@ class DomesticQuote(EntityBase):
     'Couriers Please Domestic Quote'
 
 
-    def __init__(self):
+    def __init__(self, location_from, location_to, items):
         EntityBase.__init__(self)
-        self.from_suburb   = None
-        self.from_postcode = None
-        self.to_suburb     = None
-        self.to_postcode   = None
-        self.items = list()
+        if not location_from.pickup:
+            raise NotPickupLocationError('location_from.pickup must be True')
+        self.from_suburb = location_from.suburb
+        self.from_postcode = location_from.postcode
+        self.to_suburb = location_to.suburb
+        self.to_postcode = location_to.postcode
+        self.items = items
         self.rates = list()
 
 
@@ -286,3 +288,8 @@ def to_camel_case(name):
     'convert key to camelCase'
     components = name.split('_')
     return components[0] + "".join(x.title() for x in components[1:])
+
+
+
+class NotPickupLocationError(Exception):
+    pass

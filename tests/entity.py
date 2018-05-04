@@ -9,14 +9,21 @@ class EntityTestCase(unittest.TestCase):
 
 
     def dummy_domestic_quote(self):
-        quote = DomesticQuote()
-        quote.from_suburb = 'Lonsdale'
-        quote.from_postcode = '5160'
-        quote.to_suburb = 'Adelaide'
-        quote.to_postcode = '5000'
-        quote.items = list()
-        quote.items.append(self.dummy_domestic_item())
-        return quote
+        location_from = Location({
+            'Postcode': '5160',
+            'State': 'SA',
+            'Suburb': 'LONSDALE',
+            'PickUpFlag': 'Y',
+        })
+        location_to = Location({
+            'Postcode': '5173',
+            'State': 'SA',
+            'Suburb': 'ALDINGA BEACH',
+            'PickUpFlag': 'Y',
+        })
+        items = list()
+        items.append(self.dummy_domestic_item())
+        return DomesticQuote(location_from, location_to, items)
 
 
     def dummy_domestic_item(self):
@@ -39,7 +46,7 @@ class EntityTestCase(unittest.TestCase):
             'email': 'brad@allbizsupplies.biz',
             'address1': "125 O'Sullivan Beach Road",
             'address2': '',
-            'suburb': 'Lonsdale',
+            'suburb': 'LONSDALE',
             'state': 'SA',
             'postcode': '5160',
             'phone': '0883262899',
@@ -52,7 +59,7 @@ class EntityTestCase(unittest.TestCase):
             'email': 'brad@treloardigital.com.au',
             'address1': '38 Evergreen Court',
             'address2': '',
-            'suburb': 'Aldinga beach',
+            'suburb': 'ALDINGA BEACH',
             'state': 'SA',
             'postcode': '5173',
             'phone': '0468812860',
@@ -73,9 +80,13 @@ class EntityTestCase(unittest.TestCase):
         return shipment
 
 
-    def dummy_location(self, suburb_or_postcode='5160'):
-        location = Location(suburb_or_postcode)
-        return location
+    def dummy_location(self):
+        return Location({
+            'Postcode': '5173',
+            'State': 'SA',
+            'Suburb': 'ALDINGA BEACH',
+            'PickUpFlag': 'Y',
+        })
 
 
 
