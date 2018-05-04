@@ -108,7 +108,7 @@ DomesticShipment requires three addresses:
 example_address = {
     'first_name': 'Brad',
     'last_name': 'Treloar',
-    'company_name': 'Treloar Digital',
+    'company_name': 'Treloar Digital', # required only if is_business is True
     'email': 'brad@treloardigital.com.au',
     'address1': '1001 Imaginary Street',
     'address2': '',
@@ -116,13 +116,13 @@ example_address = {
     'state': 'ZZZ', # Valid state code from Location API
     'postcode': '9999', # Valid postcode from Location API
     'phone': '0412 345 678', # spaces and numbers only, plus optional '+'
-    'is_business': False, 
+    'is_business': True, 
 }
 ```
 
-A DomesticShipment object must be created and then passed to the
-Client to create the shipment. The DomesticShipment may optionally be validated
-using the Shipment API before it is created
+A DomesticShipment object must be created and then passed to the Client to create the shipment.
+
+The DomesticShipment should be validated using the Shipment API before it is created.
 
 ```python
 shipment = DomesticShipment({
