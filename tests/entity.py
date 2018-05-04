@@ -37,7 +37,6 @@ class EntityTestCase(unittest.TestCase):
 
 
     def dummy_domestic_shipment(self):
-        shipment = DomesticShipment()
         # set addresses
         pickup_address = {
             'first_name': 'Brad',
@@ -65,19 +64,17 @@ class EntityTestCase(unittest.TestCase):
             'phone': '0468812860',
             'is_business': False,
         }
-        shipment.setAddress('pickup', pickup_address)
-        shipment.setAddress('destination', destination_address)
-        shipment.setAddress('contact', destination_address)
-        # set other fields
-        shipment.special_instruction = 'Leave on front porch'
-        shipment.reference_number = 'TEST_DUMMY'
-        shipment.terms_accepted = True
-        shipment.dangerous_goods = False
-        shipment.rate_card_id = 'L55'
-        # add item
-        shipment.items.append(self.dummy_domestic_item())
-
-        return shipment
+        return DomesticShipment({
+            'pickup_address': pickup_address,
+            'destination_address': destination_address,
+            'contact_address': destination_address,
+            'special_instruction': 'Leave on front porch',
+            'reference_number': 'TEST_DUMMY',
+            'terms_accepted': True,
+            'dangerous_goods': False,
+            'rate_card_id': 'L55',
+            'items': [ self.dummy_domestic_item() ],
+        })
 
 
     def dummy_location(self):

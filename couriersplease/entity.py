@@ -173,51 +173,19 @@ class DomesticRate(EntityBase):
 class DomesticShipment(EntityBase):
 
 
-    def __init__(self):
+    def __init__(self, shipment_data):
         EntityBase.__init__(self)
-        # pickup address
-        self.pickup_first_name = None
-        self.pickup_last_name = None
-        self.pickup_company_name = None
-        self.pickup_email = None
-        self.pickup_address1 = None
-        self.pickup_address2 = None
-        self.pickup_suburb = None
-        self.pickup_state = None
-        self.pickup_postcode = None
-        self.pickup_phone = None
-        self.pickup_is_business = None
-        # destination address
-        self.destination_first_name = None
-        self.destination_last_name = None
-        self.destination_company_name = None
-        self.destination_email = None
-        self.destination_address1 = None
-        self.destination_address2 = None
-        self.destination_suburb = None
-        self.destination_state = None
-        self.destination_postcode = None
-        self.destination_phone = None
-        self.destination_is_business = None
-        # contact address
-        self.contact_first_name = None
-        self.contact_last_name = None
-        self.contact_company_name = None
-        self.contact_email = None
-        self.contact_address1 = None
-        self.contact_address2 = None
-        self.contact_suburb = None
-        self.contact_state = None
-        self.contact_postcode = None
-        self.contact_phone = None
-        self.contact_is_business = None
+        # addresses
+        self.set_address('pickup', shipment_data['pickup_address'])
+        self.set_address('destination', shipment_data['destination_address'])
+        self.set_address('contact', shipment_data['contact_address'])
         # other fields
-        self.special_instruction = None
-        self.reference_number = None
-        self.terms_accepted = None
-        self.dangerous_goods = None
-        self.rate_card_id = None
-        self.items = list()
+        self.special_instruction = shipment_data['special_instruction']
+        self.reference_number = shipment_data['reference_number']
+        self.terms_accepted = shipment_data['terms_accepted']
+        self.dangerous_goods = shipment_data['dangerous_goods']
+        self.rate_card_id = shipment_data['rate_card_id']
+        self.items = shipment_data['items']
         # tracking
         self.consignment_code = None
 
@@ -229,13 +197,11 @@ class DomesticShipment(EntityBase):
         ])
 
 
-    def setAddress(self, type, address):
+    def set_address(self, type, address):
         for key, value in address.items():
             name = type + '_' + key
-            if hasattr(self, name):
-                setattr(self, name, value)
-            else:
-                raise Exception('Invalid property: ' + name)
+            setattr(self, name, value)
+
 
 
     def validate(self):
