@@ -109,13 +109,17 @@ class Client:
             self.handle_unsuccessful_request(response)
 
 
-    def get_location_suggestions(self, location):
+    def get_locations(self, location):
         response = self.request('GET', 'locations', {
             'suburbOrPostcode': location
         })
         body = response.json()
         if body['responseCode'] == 'SUCCESS':
-            return body['data']
+            locations = list()
+            for location_data in body['data']:
+                location = Location(location_data)
+                locations.append(location)
+            return locations
         else:
             self.handle_unsuccessful_request(response)
 

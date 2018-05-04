@@ -4,6 +4,7 @@ import yaml
 
 from tests.entity import EntityTestCase
 from couriersplease.client import Client, DataValidationError
+from couriersplease.entity import Location
 
 
 
@@ -65,15 +66,14 @@ class ClientTestCase(EntityTestCase):
     def test_get_location_suggestions(self):
         # test with valid input
         for query in ['5160', 'Adel']:
-            suggestions = self.client.get_location_suggestions(query)
-            for suggestion in suggestions:
-                for key in ['Postcode', 'Suburb', 'State']:
-                    self.assertIn(key, suggestion.keys())
+            locations = self.client.get_locations(query)
+            for location in locations:
+                self.assertIsInstance(location, Location)
 
         # test with invalid inputs
         for query in ['500000', 'Foo Bar Qux']:
-            suggestions = self.client.get_location_suggestions(query)
-            self.assertTrue(len(suggestions) == 0, 'Expected no suggestions for fake suburb')
+            locations = self.client.get_locations(query)
+            self.assertTrue(len(locations) == 0, 'Expected no suggestions for fake suburb')
 
 
     def test_validate_domestic_shipment(self):

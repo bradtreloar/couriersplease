@@ -273,16 +273,12 @@ class Location(EntityBase):
     'Couriers Please Location Entity'
 
 
-    def __init__(self, suburb_or_postcode=None):
+    def __init__(self, data):
         EntityBase.__init__(self)
-        self.suburb_or_postcode = suburb_or_postcode
-
-
-    def validate(self):
-        'validate the entity attributes'
-        v = Validator(self)
-        v.look_at('suburb_or_postcode').required().string()
-        return v
+        self.postcode = data['Postcode']
+        self.state = data['State']
+        self.suburb = data['Suburb']
+        self.pickup = data['PickUpFlag'] == 'Y'
 
 
 
