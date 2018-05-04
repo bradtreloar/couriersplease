@@ -9,8 +9,7 @@ class EntityTestCase(unittest.TestCase):
 
 
     def dummy_domestic_quote(self):
-        shipment = self.dummy_domestic_shipment()
-        quote = DomesticQuote(shipment)
+        quote = DomesticQuote()
         quote.from_suburb = 'Lonsdale'
         quote.from_postcode = '5160'
         quote.to_suburb = 'Adelaide'

@@ -129,13 +129,13 @@ class DomesticQuote(EntityBase):
     'Couriers Please Domestic Quote'
 
 
-    def __init__(self, shipment):
+    def __init__(self):
         EntityBase.__init__(self)
-        self.from_suburb   = shipment.pickup_suburb
-        self.from_postcode = shipment.pickup_postcode
-        self.to_suburb     = shipment.destination_suburb
-        self.to_postcode   = shipment.destination_postcode
-        self.items = shipment.items if shipment else list()
+        self.from_suburb   = None
+        self.from_postcode = None
+        self.to_suburb     = None
+        self.to_postcode   = None
+        self.items = list()
         self.rates = list()
 
 

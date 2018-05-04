@@ -44,7 +44,6 @@ class ClientTestCase(EntityTestCase):
     def test_get_domestic_shipment_quote(self):
         # test with a valid shipment
         shipment = self.dummy_domestic_shipment()
-        self.client.create_domestic_shipment(shipment)
         quote = self.client.get_domestic_shipment_quote(shipment)
         self.assertTrue(len(quote.rates) > 0, 'API call returned no results')
         for rate in quote.rates:
@@ -55,6 +54,27 @@ class ClientTestCase(EntityTestCase):
         shipment.pickup_postcode = None
         try:
             quote = self.client.get_domestic_shipment_quote(shipment)
+        except DataValidationError as ex:
+            self.assertEqual([{
+                'type': 'Required Field', 
+                'field': 'fromPostcode', 
+                'description': 'Please select From Postcode.'
+            }], ex.errors)
+
+
+    def test_get_domestic_quote(self):
+        # test with a valid shipment
+        quote = self.dummy_domestic_quote()
+        self.client.get_domestic_quote(quote)
+        self.assertTrue(len(quote.rates) > 0, 'API call returned no results')
+        for rate in quote.rates:
+            for key in ['CalculatedFreightCharge', 'Weight']:
+                self.assertIn(key, rate.keys())
+
+        # test again without required field
+        quote.from_postcode = None
+        try:
+            self.client.get_domestic_quote(quote)
         except DataValidationError as ex:
             self.assertEqual([{
                 'type': 'Required Field', 

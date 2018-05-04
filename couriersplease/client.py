@@ -95,9 +95,7 @@ class Client:
             self.handle_unsuccessful_request(response)
 
 
-    def get_domestic_shipment_quote(self, shipment):
-        # prepare quote object from shipment
-        quote = DomesticQuote(shipment)
+    def get_domestic_quote(self, quote):
         # call the API and get the json response
         response = self.request('POST', 'domestic/quote', quote.get_dict())
         body = response.json()
@@ -107,6 +105,17 @@ class Client:
             return quote
         else:
             self.handle_unsuccessful_request(response)
+
+
+    def get_domestic_shipment_quote(self, shipment):
+        # prepare quote object from shipment
+        quote = DomesticQuote()
+        quote.from_suburb   = shipment.pickup_suburb
+        quote.from_postcode = shipment.pickup_postcode
+        quote.to_suburb     = shipment.destination_suburb
+        quote.to_postcode   = shipment.destination_postcode
+        quote.items = shipment.items
+        return self.get_domestic_quote(quote)
 
 
     def get_locations(self, location):
