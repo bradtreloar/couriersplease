@@ -47,15 +47,8 @@ class Client:
         body = response.json()
         if body['responseCode'] == 'SUCCESS':
             return body['data']['jobNumber']
-        elif body['responseCode'] == 'INVALID_INPUT':
-            raise DataValidationError(
-                body['msg'],
-                body['data']['errors']
-            )
-        elif body['responseCode'] == 'UNAUTHORIZED':
-            raise AuthenticationError(body['msg'])
-        elif body['responseCode'] == 'SERVICE_UNAVAILABLE':
-            raise ServiceUnavailableError('Service unavailable')
+        else:
+            self.handle_unsuccessful_request(response)
 
 
     def create_domestic_shipment(self, shipment):
