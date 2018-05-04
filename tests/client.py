@@ -41,11 +41,11 @@ class ClientTestCase(EntityTestCase):
         self.assertIsInstance(label, str)
 
 
-    def test_get_domestic_quote(self):
+    def test_get_domestic_shipment_quote(self):
         # test with a valid shipment
         shipment = self.dummy_domestic_shipment()
         self.client.create_domestic_shipment(shipment)
-        quote = self.client.get_domestic_quote(shipment)
+        quote = self.client.get_domestic_shipment_quote(shipment)
         self.assertTrue(len(quote.rates) > 0, 'API call returned no results')
         for rate in quote.rates:
             for key in ['CalculatedFreightCharge', 'Weight']:
@@ -54,7 +54,7 @@ class ClientTestCase(EntityTestCase):
         # test again without required field
         shipment.pickup_postcode = None
         try:
-            quote = self.client.get_domestic_quote(shipment)
+            quote = self.client.get_domestic_shipment_quote(shipment)
         except DataValidationError as ex:
             self.assertEqual([{
                 'type': 'Required Field', 

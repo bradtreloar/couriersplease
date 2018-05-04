@@ -95,7 +95,7 @@ class Client:
             self.handle_unsuccessful_request(response)
 
 
-    def get_domestic_quote(self, shipment):
+    def get_domestic_shipment_quote(self, shipment):
         # prepare quote object from shipment
         quote = DomesticQuote(shipment)
         # call the API and get the json response
