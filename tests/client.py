@@ -3,7 +3,7 @@ import unittest
 import yaml
 
 from tests.entity import EntityTestCase
-from couriersplease.client import Client, DataValidationError
+from couriersplease.client import Client, DataValidationError, AuthenticationError
 from couriersplease.entity import Location, DomesticRate
 
 
@@ -20,12 +20,20 @@ class ClientTestCase(EntityTestCase):
 
     def test_book_domestic_pickup(self):
         shipment = self.dummy_domestic_shipment()
-        shipments = [ shipment ]
-        try:
-            job_number = self.client.book_domestic_pickup(shipments)
-            self.assertIsInstance(job_number, str)
-        except DataValidationError as ex:
-            print(ex.errors)
+        self.client.create_domestic_shipment(shipment)
+
+        # calculate weight manually instead of using the QUote API
+        shipment.total_weight = 0.00
+        for item in shipment.items:
+            # assume physical weight is OK for this test
+            shipment.total_weight += item.physical_weight
+        if shipment.total_weight < 0.1:
+            shipment.total_weight = 0.1
+        
+        pickup = self.dummy_domestic_pickup([ shipment ])
+        job_number = self.client.book_domestic_pickup(pickup)
+        self.assertIsInstance(job_number, str)
+
 
 
     def test_create_domestic_shipment(self):

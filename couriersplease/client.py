@@ -18,9 +18,9 @@ class Client:
             'Accept': 'application/json',
         }
         if sandbox:
-            self.base_url = 'https://api-test.couriersplease.com.au/v1/'
+            self.base_url = 'https://api-test.couriersplease.com.au/'
         else:
-            self.base_url = 'https://api.couriersplease.com.au/v1/'
+            self.base_url = 'https://api.couriersplease.com.au/'
 
 
     def request(self, verb, path, data):
@@ -40,10 +40,8 @@ class Client:
             )
 
 
-    def book_domestic_pickup(self, shipment):
-        # prepare pickup object from shipment
-        pickup = DomesticPickup(shipment)
-        response = self.request('POST', 'domestic/bookPickup', pickup.get_dict())
+    def book_domestic_pickup(self, pickup):
+        response = self.request('POST', 'v2/domestic/bookPickup', pickup.get_dict())
         body = response.json()
         if body['responseCode'] == 'SUCCESS':
             return body['data']['jobNumber']
@@ -52,7 +50,7 @@ class Client:
 
 
     def create_domestic_shipment(self, shipment):
-        response = self.request('POST', 'domestic/shipment/create', shipment.get_dict())
+        response = self.request('POST', 'v1/domestic/shipment/create', shipment.get_dict())
         body = response.json()
         if body['responseCode'] == 'SUCCESS':
             shipment.consignment_code = body['data']['consignmentCode']
@@ -78,7 +76,7 @@ class Client:
         if shipment.consignment_code == None:
             raise ValueError
         # call the API and get the json response
-        response = self.request('GET', 'domestic/shipment/label', {
+        response = self.request('GET', 'v1/domestic/shipment/label', {
             'consignmentNumber': shipment.consignment_code
         })
         body = response.json()
@@ -91,7 +89,7 @@ class Client:
     def get_domestic_quote(self, location_from, location_to, items):
         quote = DomesticQuote(location_from, location_to, items)
         # call the API and get the json response
-        response = self.request('POST', 'domestic/quote', quote.get_dict())
+        response = self.request('POST', 'v1/domestic/quote', quote.get_dict())
         body = response.json()
         if body['responseCode'] == 'SUCCESS':
             for rate_data in body['data']:
@@ -103,7 +101,7 @@ class Client:
 
 
     def get_locations(self, location):
-        response = self.request('GET', 'locations', {
+        response = self.request('GET', 'v1/locations', {
             'suburbOrPostcode': location
         })
         body = response.json()
@@ -118,19 +116,20 @@ class Client:
 
 
     def locate_domestic_shipment(self, shipment):
-        response = self.request('GET', 'domestic/locateParcel', {
+        response = self.request('GET', 'v1/domestic/locateParcel', {
             'trackingCode': shipment.consignment_code
         })
         body = response.json()
         if body['responseCode'] == 'SUCCESS':
             shipment.consignment_info = body['data']['consignmentInfo']
+            # @todo shipment.total_weight
             return body['data']['consignmentInfo']
         else:
             self.handle_unsuccessful_request(response)
 
 
     def validate_domestic_shipment(self, shipment):
-        response = self.request('POST', 'domestic/shipment/validate', shipment.get_dict())
+        response = self.request('POST', 'v1/domestic/shipment/validate', shipment.get_dict())
         body = response.json()
         if body['responseCode'] == 'SUCCESS':
             return True

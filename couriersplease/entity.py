@@ -52,25 +52,75 @@ class DomesticItem(EntityBase):
 class DomesticPickup(EntityBase):
 
 
-    def __init__(self, shipments):
-        EntityBase.__init__(self)
-        self.when = datetime.today() # @todo
+    def __init__(self, pickup_data, shipments):
+        {
+            "accountName": "ALLBIZ",
+            "contactName": "Brad Treloar",
+            "contactEmail": "brad@allbizsupplies.biz",
+            "readyDateTime": "2018-05-07 04:00 PM",
+            "specialInstructions": "Warehouse B",
+            "consignmentCount": "5",
+            "consignmentCode": "",
+            "totalItemCount": "7",
+            "totalWeight": "22",
+            "pickup": {
+                "phoneNumber":"0883262899",
+                "companyName":"ALLBIZ SUPPLIES",
+                "address1":"125 O'Sullivan Beach",
+                "address2":"Road",
+                "address3":"",
+                "postcode":"5160",
+                "suburb":"LONSDALE"
+            },
+            "delivery" : {
+                "companyName":"",
+                "address1":"",
+                "address2":"",
+                "postcode":"",
+                "suburb":""
+            }
+        }
 
-        # set pickup address
-        self.address1 = shipments[0].pickup_address1
-        self.address2 = shipments[0].pickup_address2
-        self.address3 = None
-        # API docs: "address4: if a company, enter the name of the contact person"
-        self.address4 = shipments[0].pickup_first_name + ' ' + shipments[0].pickup_last_name
-        # API docs: "address5: Enter a pickup phone number"
-        self.address5 = shipments[0].pickup_phone
-        self.suburb   = shipments[0].pickup_suburb
-        self.postcode = shipments[0].pickup_postcode
-        self.email = shipments[0].pickup_email
-        self.customer_name = shipments[0].pickup_company_name
+        EntityBase.__init__(self)
+        self.ready_date_time = datetime.today()
+
+        self.account_name = pickup_data['account_name']
+        self.contact_name = pickup_data['contact_name']
+        self.contact_email = pickup_data['contact_email']
+        
+        self.consignmentCount = len(shipments)
+        self.consignmentCode = shipments[0].consignment_code if len(shipments) == 1 else None
+
+        self.total_item_count = 0
+        self.total_weight = 0.00
+        for shipment in shipments:
+            self.total_item_count += len(shipment.items)
+            # @todo add total_weight to shipment when consignment is booked
+            self.total_weight += shipment.total_weight
+
+        # use first shipment's pickup details
+        self.special_instructions = shipments[0].special_instruction
+        self.pickup = {
+            'companyName': shipments[0].pickup_company_name,
+            'address1': shipments[0].pickup_address1,
+            'address2': shipments[0].pickup_address2,
+            'address3': None, # account name is appended here
+            'suburb':   shipments[0].pickup_suburb,
+            'postcode': shipments[0].pickup_postcode,
+            'phoneNumber': shipments[0].pickup_phone,
+        }
+
+        if len(shipments) == 1:
+            self.delivery = {
+                'companyName': shipments[0].destination_company_name,
+                'address1': shipments[0].destination_address1,
+                'address2': shipments[0].destination_address2,
+                'suburb':   shipments[0].destination_suburb,
+                'postcode': shipments[0].destination_postcode,
+            }
 
         # set destination address
-        if len(shipments) > 1:
+        if len(shipments) == 1:
             # API docs: "destinationAddress1: Enter consignment count"
             self.destination_address1 = str(len(shipments)) + ' consignments'
         elif len(shipments) > 0:
@@ -96,7 +146,7 @@ class DomesticPickup(EntityBase):
     def get_dict(self):
         entity_dict = EntityBase.get_dict(self)
         'format date as string'
-        entity_dict['when'] = self.when.strftime('%Y-%m-%d %I:%I %p')
+        entity_dict['readyDateTime'] = self.ready_date_time.strftime('%Y-%m-%d %I:%I %p')
         return entity_dict
 
 
@@ -191,9 +241,11 @@ class DomesticShipment(EntityBase):
 
 
     def get_dict(self):
-        'omit tracking info from entity dict'
+        'omit tracking and quote info from entity dict'
         return EntityBase.get_dict(self, omitted_keys=[
-            'consignment_code', 'consignment_info'
+            'consignment_code',
+            'consignment_info',
+            'total_weight'
         ])
 
 

@@ -1,7 +1,7 @@
 
 import unittest
 
-from couriersplease.entity import DomesticItem, DomesticQuote, DomesticShipment, Location
+from couriersplease.entity import DomesticItem, DomesticQuote, DomesticPickup, DomesticShipment, Location
 
 
 
@@ -36,6 +36,14 @@ class EntityTestCase(unittest.TestCase):
         })
 
 
+    def dummy_domestic_pickup(self, shipments):
+        return DomesticPickup({
+            "account_name": "ALLBIZ",
+            "contact_name": "Brad Treloar",
+            "contact_email": "brad@allbizsupplies.biz",
+        }, shipments)
+
+
     def dummy_domestic_shipment(self):
         # set addresses
         pickup_address = {
@@ -43,8 +51,8 @@ class EntityTestCase(unittest.TestCase):
             'last_name': 'Treloar',
             'company_name': 'Allbiz Supplies',
             'email': 'brad@allbizsupplies.biz',
-            'address1': "125 O'Sullivan Beach Road",
-            'address2': '',
+            'address1': "125 O'Sullivan",
+            'address2': 'Beach Road',
             'suburb': 'LONSDALE',
             'state': 'SA',
             'postcode': '5160',
@@ -68,7 +76,7 @@ class EntityTestCase(unittest.TestCase):
             'pickup_address': pickup_address,
             'destination_address': destination_address,
             'contact_address': destination_address,
-            'special_instruction': 'Leave on front porch',
+            'special_instruction': 'Leave on porch',
             'reference_number': 'TEST_DUMMY',
             'terms_accepted': True,
             'dangerous_goods': False,
