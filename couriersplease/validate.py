@@ -2,27 +2,11 @@
 import re
 from datetime import datetime
 
+from couriersplease.enum import state_codes
+
 
 class Validator:
     'Validator for API Entities'
-
-
-    state_codes = [
-        'ACT', 'JBT', 'NSW', 'NT', 'QLD',
-        'SA', 'TAS', 'VIC', 'WA',
-    ]
-
-    state_names = {
-        'ACT': 'Australian Capital Territory',
-        'JBT': 'Jervis Bay Territory', 
-        'NSW': 'New South Wales',
-        'NT':  'Northern Territory',
-        'QLD': 'Queensland',
-        'SA':  'South Australia',
-        'TAS': 'Tasmania',
-        'VIC': 'Victoria',
-        'WA':  'Western Australia',
-    }
 
 
     def __init__(self, entity):
@@ -130,7 +114,7 @@ class Validator:
 
     
     def state(self):
-        if self.attr not in Validator.state_codes:
+        if self.attr not in state_codes:
             self.mark_error('must be a valid Australian state or territory code')
 
 
