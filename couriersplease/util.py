@@ -57,7 +57,7 @@ class Address:
 
 
     @staticmethod
-    def condense(address, field_lengths):
+    def compress(address, field_lengths):
         # Join the address into a single uppercase string
         output = " ".join(address).upper()
 
@@ -95,7 +95,7 @@ class Address:
             # apply the substitution
             output = re.sub(rule[0], rule[1], output).strip()
 
-        # Return the condensed address, split into fields
+        # Return the compressd address, split into fields
         return Address.split_into_fields(output, field_lengths)
 
 

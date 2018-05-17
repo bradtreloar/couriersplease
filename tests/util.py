@@ -23,7 +23,7 @@ class UtilTestCase(unittest.TestCase):
             self.assertEqual(result, expected_result)
 
 
-    def test_condense(self):
+    def test_compress(self):
         tests = [
             (
                 ["Level 99, John Smith Building", "125 Reallylongname Beach Boulevard"],
@@ -34,7 +34,7 @@ class UtilTestCase(unittest.TestCase):
         for addr in tests:
             input = addr[0]
             expected_result = addr[1]
-            result = Address.condense(input, [15, 15, 15])
+            result = Address.compress(input, [15, 15, 15])
             self.assertEqual(result, expected_result)
 
 
