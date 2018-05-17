@@ -23,6 +23,7 @@ class EntityBase:
         return entity_dict
 
 
+
 class DomesticItem(EntityBase):
     
 
@@ -51,34 +52,6 @@ class DomesticPickup(EntityBase):
 
 
     def __init__(self, pickup_data, shipments):
-        {
-            'accountName': "ALLBIZ",
-            'contactName': "Brad Treloar",
-            'contactEmail': "brad@allbizsupplies.biz",
-            'readyDateTime': "2018-05-07 04:00 PM",
-            'specialInstructions': "Warehouse B",
-            'consignmentCount': "5",
-            'consignmentCode': "",
-            'totalItemCount': "7",
-            'totalWeight': "22",
-            'pickup': {
-                'phoneNumber': "0883262899",
-                'companyName': "ALLBIZ SUPPLIES",
-                'address1': "125 O'Sullivan Beach",
-                'address2': "Road",
-                'address3': "",
-                'postcode': "5160",
-                'suburb': "LONSDALE"
-            },
-            'delivery' : {
-                'companyName': "",
-                'address1': "",
-                'address2': "",
-                'postcode': "",
-                'suburb': ""
-            }
-        }
-
         EntityBase.__init__(self)
         self.ready_date_time = datetime.today()
 
