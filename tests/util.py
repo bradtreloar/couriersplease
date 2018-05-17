@@ -1,41 +1,40 @@
 
 import unittest
 
-from couriersplease.util import condense_address
+from couriersplease.util import Address
 
 
 
 class UtilTestCase(unittest.TestCase):
 
 
-    def test_condense(self):
-        addresses = [
+    def test_split_into_fields(self):
+        tests = [
             (
-                "123 Easy Street",
-                "123 EASY STREET"
-            ),
-            (
-                "UNIT 99, 125 Reallylongname Beach Boulevard",
-                "UNIT 99, 125 REALLYLONGNAME BEACH BOULEVARD"
-            ),
-            (
-                "Level 99, 125 Reallylongname Beach Boulevard",
-                "LEVEL 99, 125 REALLYLONGNAME BEACH BOULEVARD"
-            ),
-            (
-                "Level 99, John Smith Building, 125 Reallylongname Beach Boulevard",
-                "LVL99 125 REALLYLONGNAME BCH BLVD"
-            ),
-            (
-                "Level 99, John Smith Building, 125 Reallylongname Beach Boulevard (deliveries via Thatother Reallylongname Avenue)",
-                "LVL99 125 REALLYLONGNAME BCH BLVD"
-            ),
+                "UNIT 99 125 REALLYLONGNAME BEACH BOULEVARD",
+                ["UNIT 99 125", "REALLYLONGNAME", "BEACH BOULEVARD"],
+            )
         ]
 
-        for addr in addresses:
+        for addr in tests:
             input = addr[0]
             expected_result = addr[1]
-            result = condense_address(input, [15, 15, 15])
+            result = Address.split_into_fields(input, [15, 15, 15])
+            self.assertEqual(result, expected_result)
+
+
+    def test_condense(self):
+        tests = [
+            (
+                ["Level 99, John Smith Building", "125 Reallylongname Beach Boulevard"],
+                ["LVL99 125", "REALLYLONGNAME", "BCH BLVD"],
+            )
+        ]
+
+        for addr in tests:
+            input = addr[0]
+            expected_result = addr[1]
+            result = Address.condense(input, [15, 15, 15])
             self.assertEqual(result, expected_result)
 
 
