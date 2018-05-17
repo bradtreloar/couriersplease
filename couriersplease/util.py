@@ -41,7 +41,7 @@ def condense_address(addr, field_lengths):
             return addr
 
         # apply the substitution
-        addr = re.sub(rule[0], rule[1], addr)
+        addr = re.sub(rule[0], rule[1], addr).strip()
 
     # return the condensed address
     return addr
