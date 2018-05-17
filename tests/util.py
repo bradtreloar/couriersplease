@@ -10,22 +10,33 @@ class UtilTestCase(unittest.TestCase):
 
     def test_condense(self):
         addresses = [
-            "123 Easy Street",
-            "U 99, 125 Reallylongname Beach Boulevard",
-            "Unit 99, 125 Reallylongname Beach Boulevard",
-            "Level 99, John Smith Building, 125 Reallylongname Beach Boulevard",
-            "Level 99, John Smith Building, 125 Reallylongname Beach Boulevard (deliveries via Thatother Reallylongname Avenue)",
-            "Level 99, John Smith Building, 125 O'Sullivan Beach Boulevard   (deliveries via Thatother Reallylongname Avenue)",
+            (
+                "123 Easy Street",
+                "123 EASY STREET"
+            ),
+            (
+                "UNIT 99, 125 Reallylongname Beach Boulevard",
+                "UNIT 99, 125 REALLYLONGNAME BEACH BOULEVARD"
+            ),
+            (
+                "Level 99, 125 Reallylongname Beach Boulevard",
+                "LEVEL 99, 125 REALLYLONGNAME BEACH BOULEVARD"
+            ),
+            (
+                "Level 99, John Smith Building, 125 Reallylongname Beach Boulevard",
+                "LVL99 125 REALLYLONGNAME BCH BLVD"
+            ),
+            (
+                "Level 99, John Smith Building, 125 Reallylongname Beach Boulevard (deliveries via Thatother Reallylongname Avenue)",
+                "LVL99 125 REALLYLONGNAME BCH BLVD"
+            ),
         ]
 
-        print()
-
-        for addr_string in addresses:
-            cond_addr_string = condense_address(addr_string, [19, 19, 19])
-            print(str(len(addr_string)), '=>', str(len(cond_addr_string)))
-            print(addr_string, '=>', cond_addr_string)
-
-        print()
+        for addr in addresses:
+            input = addr[0]
+            expected_result = addr[1]
+            result = condense_address(input, [15, 15, 15])
+            self.assertEqual(result, expected_result)
 
 
 
